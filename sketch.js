@@ -1,5 +1,5 @@
 var log1,log2,log3;
-var paper;
+var paperball;
 var ground;
 const Engine = Matter.Engine;
 const World = Matter.World;
@@ -15,36 +15,44 @@ function preload()
 
 function setup() {
 	createCanvas(800, 700);
-    
-    log1=createSprite(300,615,20,100);
-    log2=createSprite(400,655,200,20);
-	log3=createSprite(500,615,20,100);
-	paper=createSprite(100,40);
-	paper=ellipse(56, 46, 55, 55);
+	
 	engine = Engine.create();
 	world = engine.world;
-	groundSprite=createSprite(width/2, height-35, width,10);
-	groundSprite.shapeColor=color(255)
-	//Create the Bodies Here.
+
+    log1=Bodies.rectangle(300,615,20,100, {isStatic:true});
+    log2=Bodies.rectangle(400,655,200,20, {isStatic:true});
+	log3=Bodies.rectangle(500,615,20,100, {isStatic:true});
 	
+	World.add(world,log1);
+	World.add(world,log2);
+	World.add(world,log3);
+
+	paperball=new Paper(200, 200, 10);
+
+	groundSprite=Bodies.rectangle(width/2, height-35, width,10, {isStatic:true});
+	World.add(world,groundSprite);
 
 	Engine.run(engine);
   
 }
 
 function draw() {
-  rectMode(CENTER);
   background(0);
-  crumbledpaperball();
+  rectMode(CENTER);
+
+  rect(log1.position.x, log1.position.y, 20,100);
+  rect(log2.position.x, log2.position.y, 200,20);
+  rect(log3.position.x, log3.position.y, 20,100);
+  rect(groundSprite.position.x, groundSprite.position.y, width, 10);
+   
+  
+  paperball.display();
   drawSprites();
  
 }
 
-function crumbledpaperball(){
-  if (paper<100){	
-	isStatic=false,
-	restitution=0.3,
-	friction=0.5,
-	density=1.2
-  }
- }
+function keyPressed(){
+	if (keyCode===UP_ARROW){
+      Matter.Body.applyForce(paperball.body, paperball.body.position, {x:12, y:-12})
+	}
+}
